@@ -31,26 +31,189 @@ We use this categorical data encoding technique when the features are nominal(do
 • Yeojohnson method
 
 # CODING AND OUTPUT:
-       
+from google.colab import drive
+
+drive.mount('/content/drive')
+
+import pandas as pd
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+import seaborn as sns
+
+![image](https://github.com/user-attachments/assets/d270825a-f546-447f-abd1-cc6e3a76da3f)
+
+ls drive/MyDrive/'Colab Notebooks'/Data_set.csv
+
+![image](https://github.com/user-attachments/assets/cb925a94-c76a-48b9-b45a-bd95317c76d3)
+
+ls drive/MyDrive/'Colab Notebooks'/Data_to_Transform.csv
+
+![image](https://github.com/user-attachments/assets/ebb89d99-d32d-41f3-b883-718accbeea7b)
+
+ls drive/MyDrive/'Colab Notebooks'/'Encoding Data.csv'
+
+![image](https://github.com/user-attachments/assets/01ea8c11-b98e-412d-af86-bd016ee36bb6)
+
+df=pd.read_csv('drive/MyDrive/Colab Notebooks/Encoding Data.csv')
+
+df
+
+![image](https://github.com/user-attachments/assets/511bcf8d-90a6-40eb-8221-4e6d2fbe5117)
+
+ORDINAL ENCODER
+
+from sklearn.preprocessing import LabelEncoder,OrdinalEncoder
+
+pm=['Hot','Warm','Cold']
+
+e1=OrdinalEncoder(categories=[pm])
+
+e1.fit_transform(df[["ord_2"]])
+
+![image](https://github.com/user-attachments/assets/1f93d1da-c790-4817-927c-22c388879ea5)
+
+df['bo2']=e1.fit_transform(df[["ord_2"]])
+
+df
+
+![image](https://github.com/user-attachments/assets/a4350b91-f307-44ab-9e54-c7fb75fad35f)
+
+LABEL ENCODER
+
+le=LabelEncoder()
+
+dfc=df.copy()
+
+dfc['ord_2']=le.fit_transform(df[["ord_2"]])
+
+dfc
+
+![image](https://github.com/user-attachments/assets/17d1d943-1e83-490a-b916-cc29710e85ae)
+
+ONEHOT ENCODER
+
+
+from sklearn.preprocessing import OneHotEncoder
+
+ohe=OneHotEncoder()
+
+df2=df.copy()
+
+enc=pd.DataFrame(ohe.fit_transform(df2[['nom_0']]))
+
+df2=pd.concat([df2,enc],axis=1)
+
+df2
+
+![image](https://github.com/user-attachments/assets/0b01f6be-27f0-45c5-b716-65c7de6bc9ed)
+
+pd.get_dummies(df2,columns=["nom_0"])
+
+![image](https://github.com/user-attachments/assets/ee7dd2d3-3300-4541-bdda-f1de8e6fc8c2)
+
+BINARY ENCODER
+
+pip install --upgrade category_encoders
+
+![image](https://github.com/user-attachments/assets/66069596-0a6d-4b35-a3ca-57ccb684d5c8)
+
+from category_encoders import BinaryEncoder
+
+df=pd.read_csv('drive/MyDrive/data.csv')
+
+df
+
+dfb=pd.concat([df,nd],axis=1)
+
+dfb
+
+![image](https://github.com/user-attachments/assets/848fd5f1-a5fb-4406-a36e-f109dac8b094)
+
+
+TARGET ENCODER
+
+from category_encoders import TargetEncoder
+
+te=TargetEncoder()
+
+cc=df.copy()
+
+new=te.fit_transform(X=cc["City"],y=cc["Target"])
+
+cc=pd.concat([cc,new],axis=1)
+
+cc
+
+![image](https://github.com/user-attachments/assets/64082181-bcc2-430c-9f42-a476157b92b7)
+
+FEATURE TRANSFORMATION
+
+from scipy import stats
+
+df=pd.read_csv('drive/MyDrive/Data_to_Transform.csv')
+
+df
+
+![image](https://github.com/user-attachments/assets/c1a124de-ab39-40b1-8d9a-e57415fe583b)
+
+df.skew()
+
+![image](https://github.com/user-attachments/assets/2ed57179-30bf-4aa5-b9e5-b8fe88826ad1)
+
+np.log(df["Highly Positive Skew"])  
+
+![image](https://github.com/user-attachments/assets/a205734e-d02e-49ef-a7c4-ad41e596bb92)
+
+np.reciprocal(df["Moderate Positive Skew"])
+
+![image](https://github.com/user-attachments/assets/0af9c29b-6a54-44bc-b495-57f51be98fa4)
+
+np.sqrt(df["Highly Positive Skew"])
+
+![image](https://github.com/user-attachments/assets/65765c70-51e3-4946-b3c4-641d1d2d67d6)
+
+np.square(df["Highly Positive Skew"])
+
+![image](https://github.com/user-attachments/assets/b748d6cd-32ad-418f-a2d1-0c19a8460665)
+
+df["Highly Positive Skew_boxcox"],parameters=stats.boxcox(df["Highly Positive Skew"])
+
+df
+
+![image](https://github.com/user-attachments/assets/9afe082b-0865-4bc1-b9a0-c1d0b813b88e)
+
+df["Moderate Negative Skew_yeojohnson"],parameters=stats.yeojohnson(df["Moderate Negative Skew"])
+
+df
+
+![image](https://github.com/user-attachments/assets/9c07f73e-d29b-4f35-afd4-32c95f652764)
+
+df.skew()
+
+![image](https://github.com/user-attachments/assets/f7d96adb-7049-4b4b-9684-b6228d2dca02)
+
+import seaborn as sns
+
+import statsmodels.api as sm
+
+import matplotlib.pyplot as plt
+
+sm.qqplot(df["Moderate Negative Skew"],line='45')
+
+plt.show()
+
+![image](https://github.com/user-attachments/assets/4935b51c-447f-467a-bad3-9328dc93dc1f)
+
+sm.qqplot(np.reciprocal(df["Moderate Negative Skew"]),line='45')
+
+plt.show()
+
+![image](https://github.com/user-attachments/assets/73685f29-81c8-44b9-bf32-363086485883)
+
+
 # RESULT:
-       # INCLUDE YOUR RESULT HERE
-![Screenshot 2024-11-18 204613](https://github.com/user-attachments/assets/ed6d7b6d-2f38-49c8-9eb9-c1f81356c398)
-![Screenshot 2024-11-18 204932](https://github.com/user-attachments/assets/f582569a-e320-4f8b-86f3-99906b24fcb5)
-![Screenshot 2024-11-18 204648](https://github.com/user-attachments/assets/fded75ee-e950-40c0-b191-86131aaf7851)
+THUS THE ABOVE CODE IS EXECUETED SUCCESSFULLY
 
-![Screenshot 2024-11-18 204634](https://github.com/user-attachments/assets/b2013f63-d9)
-![Screenshot 2024-11-18 204719](https://github.com/user-attachments/assets/1e3fa67b-85d8-4e86-966e-f5472c014150)
-
-![Screenshot 2024-11-18 204731](https://github.com/user-attachments/assets/8a61b488-8a60-4807-9379-dd2bb6fffe12)
-
-       
-![Screenshot 2024-11-18 204749](https://github.com/user-attachments/asset![Screenshot 2024-11-18 204759](https://github.com/user-attachments/assets/7e50b4e1-ee1c-4cd4-8899-166a7b5f5c45)
-s/64675293-3786-4f73-a189-7752694f3efe)
-![Screenshot 2024-11-18 204812](https://github.com/user-attachments/assets/0583d5af-91e2-42c5-a8b5-5ee13f73f5bb)
-![Screenshot 2024-11-18 204824](https://github.com/user-attachments/assets/8722f00c-794c-4a7b-be18-3175565a4fb9)
-![Screenshot 2024-11-18 204838](https://github.com/user-attachments/assets/c2585db6-6ce4-442c-b61f-52e4531cfda6)
-![Screenshot 2024-11-18 204848](https://github.com/user-attachments/assets/7a2b7a6e-12db-4199-a87e-75728c8e61fc)
-![Screenshot 2024-11-18 204859](https://github.com/user-attachments/assets/783ed411-3279-4389-b200-29091acbbfaa)
-![Screenshot 2024-11-18 204910](https://github.com/user-attachments/assets/3565a064-39bf-4ff4-8710-dad036d3cfd9)
-![Screenshot 2024-11-18 204922](https://github.com/user-attachments/assets/3bd53db4-1689-49ba-aa5a-ad13b6fcdaae)
-![Screenshot 2024-11-18 204932](https://github.com/user-attachments/assets/319ffcb2-8909-4cd6-ba69-88055e33bcfe)
